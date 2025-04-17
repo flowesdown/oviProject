@@ -48,4 +48,13 @@ public class Direction {
     public int getDistance() {
         return distance;
     }
+
+    @Override
+    public String toString() {
+        return "Direction{" +
+                "path=" + path +
+                ", time=" + time +
+                ", distance=" + distance +
+                '}';
+    }
 }

@@ -1,15 +1,18 @@
-package com.ovidonius;
+package com.ovidonius.services;
 
 import com.ovidonius.graph.CityGraph;
-import com.ovidonius.models.*;
-import com.ovidonius.models.enums.*;
+import com.ovidonius.models.Direction;
+import com.ovidonius.models.Offer;
+import com.ovidonius.models.Train;
+import com.ovidonius.models.enums.StationType;
+import com.ovidonius.models.enums.TrainClass;
+import com.ovidonius.models.enums.TrainType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Generator {
-
+public class OfferGenerator {
     private static final Random random = new Random();
 
     // Метод для генерации заданного числа оферов
