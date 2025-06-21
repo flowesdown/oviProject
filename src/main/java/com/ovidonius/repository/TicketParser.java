@@ -13,32 +13,36 @@ public class TicketParser {
 
     public static List<Ticket> readTicketsFromFile(String filename) {
         List<Ticket> tickets = new ArrayList<>();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             StringBuilder ticketBlock = new StringBuilder();
-
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Ticket ID:")) {
-                    if (ticketBlock.length() > 0) {
+                    if (!ticketBlock.isEmpty()) {
                         tickets.add(parseTicket(ticketBlock.toString()));
                         ticketBlock.setLength(0);
                     }
                 }
                 ticketBlock.append(line).append("\n");
             }
-
             if (ticketBlock.length() > 0) {
                 tickets.add(parseTicket(ticketBlock.toString()));
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return tickets;
     }
-
+    public static void writeBoughtTicketToFile(String filename,List<Ticket> boughtTickets) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Ticket ticket : boughtTickets) {
+                writer.write(serializeTicket(ticket));
+                writer.newLine(); writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void writeTicketsToFile(String filename, List<Ticket> tickets) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Ticket ticket : tickets) {
@@ -49,15 +53,11 @@ public class TicketParser {
             e.printStackTrace();
         }
     }
-
     private static Ticket parseTicket(String block) {
         String[] lines = block.split("\n");
-
         String ticketId = lines[0].split(": ")[1].trim();
         String issuedAtStr = lines[1].split(": ")[1].trim();
         LocalDateTime issuedAt = LocalDateTime.parse(issuedAtStr);
-
-        // Direction
         String pathLine = lines[2].split(": ")[1];
         List<StationType> path = new ArrayList<>();
         for (String name : pathLine.split(" -> ")) {
@@ -67,8 +67,6 @@ public class TicketParser {
         int time = Integer.parseInt(lines[4].split(": ")[1]);
 
         Direction direction = new Direction(path.get(0).name(), path.get(path.size() - 1).name());
-
-        // Train
         String trainId = lines[5].split(": ")[1];
         TrainType trainType = TrainType.valueOf(lines[6].split(": ")[1]);
         TrainClass trainClass = TrainClass.valueOf(lines[7].split(": ")[1]);
@@ -117,4 +115,5 @@ public class TicketParser {
 
         return sb.toString();
     }
+
 }

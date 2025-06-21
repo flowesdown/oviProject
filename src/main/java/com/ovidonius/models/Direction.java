@@ -17,9 +17,7 @@ public class Direction {
         StationType end = StationType.getStationTypeByName(endName);
 
         if (start != null && end != null) {
-            System.out.println("Start: " + start + " End: " + end);
             path = PathFinder.findPath(start, end);
-            System.out.println("Path: " + path);
             if (path != null && !path.isEmpty()) {
                 distance = path.size() - 1;
                 time = (int) (distance * 1.75); // Ожидаемое время в пути

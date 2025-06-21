@@ -106,7 +106,7 @@ public class Offer {
     // Переопределение toString для удобного вывода
     @Override
     public String toString() {
-        return "Offer: " + "Train " + train.getTrainId() + ", Type: " + train.getType() +
+        return "Offer: " +"Path "+direction.getPath()+ ", Train " + train.getTrainId() + ", Type: " + train.getType() +
                 ", Class: " + train.getTrainClass() + ", Price: " + price + " USD" +
                 ", Departure Time: " + departureTime + ", Arrival Time: " + arrivalTime;
     }

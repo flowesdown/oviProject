@@ -6,6 +6,7 @@ import com.ovidonius.models.enums.TrainType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDateTime;
 
 public class SearchPanel extends JPanel {
 

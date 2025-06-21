@@ -1,7 +1,7 @@
 package com.ovidonius.ui;
 
 import com.ovidonius.models.Ticket;
-import com.ovidonius.repository.TicketParser;
+import com.ovidonius.repository.TicketRepository;
 import com.ovidonius.services.TicketService;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class MainWindow extends JFrame {
     private TicketResultPanel ticketResultPanel;
     private TicketService ticketService;
 
-    public MainWindow(String ticketsFilePath) {
+    public MainWindow(String resourcesFilePath) {
         setTitle("E-Train Schedule");
         setSize(900, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -22,7 +22,7 @@ public class MainWindow extends JFrame {
         setLayout(new BorderLayout());
 
         // Инициализация компонентов
-        ticketService = new TicketService(ticketsFilePath);  // Передаем путь к файлу
+        ticketService = new TicketService(resourcesFilePath);  // Передаем путь к файлу
         initComponents();
     }
 
@@ -52,16 +52,10 @@ public class MainWindow extends JFrame {
             Ticket selected = ticketResultPanel.getSelectedTicket();
             if (selected != null) {
                 JOptionPane.showMessageDialog(this, "Билет куплен:\n" + selected);
+                ticketService.buyTheTicket(selected);
             } else {
                 JOptionPane.showMessageDialog(this, "Пожалуйста, выберите билет");
             }
         });
-    }
-
-    public static void main(String[] args) {
-        // Путь к файлу с билетами, например:
-        String ticketsFilePath = "tickets.txt";  // Укажите путь к файлу с билетами
-
-        SwingUtilities.invokeLater(() -> new MainWindow(ticketsFilePath).setVisible(true));
     }
 }

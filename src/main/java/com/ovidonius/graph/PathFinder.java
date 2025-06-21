@@ -7,9 +7,7 @@ import java.util.*;
 public class PathFinder {
 
     public static List<StationType> findPath(StationType start, StationType end) {
-        if (start == end) {
-            return Collections.singletonList(start);
-        }
+        if (start == end) return Collections.singletonList(start);
 
         Queue<StationType> queue = new LinkedList<>();
         Map<StationType, StationType> previous = new HashMap<>();
@@ -18,14 +16,10 @@ public class PathFinder {
         queue.add(start);
         visited.add(start);
 
-
         while (!queue.isEmpty()) {
             StationType current = queue.poll();
 
-            // Печатаем соседей текущей станции
-            List<StationType> neighbors = current.getNeighbors();
-
-            for (StationType neighbor : neighbors) {
+            for (StationType neighbor : current.getNeighbors()) {
                 if (!visited.contains(neighbor)) {
                     visited.add(neighbor);
                     previous.put(neighbor, current);

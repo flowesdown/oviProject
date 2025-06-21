@@ -10,7 +10,6 @@ public class Train {
     private TrainClass trainClass;  // Класс поезда (FIRST_CLASS, SECOND_CLASS)
     private String trainId;         // Уникальный идентификатор поезда
 
-    // Конструктор с автогенерацией ID (если создаём новый поезд вручную)
     public Train(TrainType type, TrainClass trainClass) {
         this.type = type;
         this.trainClass = trainClass;

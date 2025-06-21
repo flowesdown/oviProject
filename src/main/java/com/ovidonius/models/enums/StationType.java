@@ -10,19 +10,18 @@ import java.util.List;
 public enum StationType {
     BUCHAREST("Bucharest"),
     CLUJ_NAPOCA("Cluj-Napoca"),
-    TIMISOARA("Timișoara"),
-    IASI("Iași"),
-    CONSTANTA("Constanța"),
-    BRASOV("Brașov"),
+    TIMISOARA("Timisoara"),
+    IASI("Iasi"),
+    CONSTANTA("Constanta"),
+    BRASOV("Brasov"),
     CRAIOVA("Craiova"),
     GALATI("Galați"),
     PLOIESTI("Ploiești"),
     ARAD("Arad"),
-    TARGU_MURES("Târgu Mureș"),
+    TARGU_MURES("Targu Mureș"),
     SIBIU("Sibiu"),
     ORADEA("Oradea"),
-    PITESTI("Pitești"),
-    BUCURESTI("București");
+    PITESTI("Pitești");
 
     private final String cityName;
     private List<StationType> neighbors;
