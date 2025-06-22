@@ -11,13 +11,13 @@ import java.util.Random;
 @Getter
 @Setter
 public class Offer {
-    private Direction direction;  // Направление (маршрут)
-    private Train train;          // Поезд
-    private double price;         // Цена билета
-    private LocalDateTime departureTime;  // Время отправления
-    private LocalDateTime arrivalTime;    // Время прибытия
 
-    // Конструктор, принимающий Direction и Train
+    private Direction direction;
+    private Train train;
+    private double price;
+    private LocalDateTime departureTime;
+    private LocalDateTime arrivalTime;
+
     public Offer(Direction direction, Train train) {
         this.direction = direction;
         this.train = train;
@@ -26,88 +26,73 @@ public class Offer {
         this.arrivalTime = calculateArrivalTime();
     }
 
-    // Метод для расчета цены билета
     private double calculatePrice() {
-        // Получаем время в пути из Direction (например, время в минутах)
-        int travelTime = direction.getTime();  // Используем время, которое хранится в Direction
-        double basePrice = travelTime * 1.5;   // Базовая цена: 1.5 за каждую минуту пути
+        int travelTime = direction.getTime();
+        double basePrice = travelTime * 1.5;
 
-        // Коэффициенты для типа поезда
         double typeCoefficient = getTypeCoefficient(train.getType());
         double classCoefficient = getClassCoefficient(train.getTrainClass());
 
-        // Цена: время в пути * коэффициенты типа и класса поезда
         return basePrice * typeCoefficient * classCoefficient;
     }
 
-    // Коэффициент для типа поезда
     private double getTypeCoefficient(TrainType type) {
         switch (type) {
             case EXPRESS:
-                return 1.5;  // Экспресс более дорогой
+                return 1.5;
             case REGULAR:
-                return 1.0;  // Обычный поезд
+                return 1.0;
             case FREIGHT:
-                return 0.8;  // Грузовой поезд
+                return 0.8;
             case LOCAL:
-                return 0.9;  // Местный поезд
+                return 0.9;
             default:
                 return 1.0;
         }
     }
 
-    // Коэффициент для класса поезда
     private double getClassCoefficient(TrainClass trainClass) {
         switch (trainClass) {
             case FIRST_CLASS:
-                return 2.0;  // Первый класс дороже
+                return 2.0;
             case SECOND_CLASS:
-                return 1.5;  // Второй класс дешевле
+                return 1.5;
             default:
                 return 1.0;
         }
     }
 
-    // Метод для расчета времени отправления
     private LocalDateTime calculateDepartureTime() {
-        // Получаем текущее время
         LocalDateTime now = LocalDateTime.now();
-
-        // Получаем количество часов, которое можно прибавить к текущему времени
         Random random = new Random();
-        int randomHours = random.nextInt(5) + 1;  // Случайное количество часов (от 1 до 5)
+        int randomHours = random.nextInt(5) + 1;
+        LocalDateTime departure = now.plusHours(randomHours);
 
-        // Время отправления - это текущее время + случайное количество часов
-        LocalDateTime departureTime = now.plusHours(randomHours);
+        int travelTimeInHours = direction.getTime() / 60;
+        departure = departure.plusHours(travelTimeInHours);
 
-        // Добавляем к времени отправления время из Direction (в часах)
-        int travelTimeInHours = direction.getTime() / 60;  // Преобразуем минуты в часы
-        departureTime = departureTime.plusHours(travelTimeInHours);
-
-        return departureTime;
+        return departure;
     }
 
-    // Метод для расчета времени прибытия
     private LocalDateTime calculateArrivalTime() {
-        // Время прибытия = время отправления + время в пути
-        int travelTimeInMinutes = direction.getTime();  // Время в пути в минутах
+        int travelTimeInMinutes = direction.getTime();
+        LocalDateTime arrival = departureTime.plusMinutes(travelTimeInMinutes);
 
-        // Убедимся, что прибытие происходит после отправления
-        LocalDateTime arrivalTime = departureTime.plusMinutes(travelTimeInMinutes);
-
-        // Проверим, что время прибытия всегда позже времени отправления
-        if (arrivalTime.isBefore(departureTime)) {
-            arrivalTime = departureTime.plusMinutes(travelTimeInMinutes);
+        if (arrival.isBefore(departureTime)) {
+            arrival = departureTime.plusMinutes(travelTimeInMinutes);
         }
 
-        return arrivalTime;
+        return arrival;
     }
 
-    // Переопределение toString для удобного вывода
     @Override
     public String toString() {
-        return "Offer: " +"Path "+direction.getPath()+ ", Train " + train.getTrainId() + ", Type: " + train.getType() +
-                ", Class: " + train.getTrainClass() + ", Price: " + price + " USD" +
-                ", Departure Time: " + departureTime + ", Arrival Time: " + arrivalTime;
+        return "Offer: Path " + direction.getPath() +
+                ", Train " + train.getTrainId() +
+                ", Type: " + train.getType() +
+                ", Class: " + train.getTrainClass() +
+                ", Price: " + price + " USD" +
+                ", Departure Time: " + departureTime +
+                ", Arrival Time: " + arrivalTime;
     }
 }

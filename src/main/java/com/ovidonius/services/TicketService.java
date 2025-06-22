@@ -13,25 +13,35 @@ import java.util.List;
 
 public class TicketService {
     TicketRepository ticketRepository;
+
     public TicketService(String resourceFilePath) {
-        this.ticketRepository=new TicketRepository(resourceFilePath);
+        this.ticketRepository = new TicketRepository(resourceFilePath);
     }
 
     public List<Ticket> searchTickets(SearchPanel.SearchQuery query) {
         List<Ticket> goodTickets = new ArrayList<>();
         Date startDate = query.getDepartureTimeStart();
         Date endDate = query.getDepartureTimeEnd();
+
         for (Ticket ticket : ticketRepository.getTickets()) {
+            if (query.isViaStationEnabled() &&
+                    !ticket.getOffer().getDirection().getPath().contains(query.getViaStation())) {
+                continue;
+            }
+
             boolean fromMatches = query.getFromStation().equals(
-                    ticket.getOffer().getDirection().getPath().getFirst()
+                    ticket.getOffer().getDirection().getPath().get(0)
             );
             boolean toMatches = query.getToStation().equals(
-                    ticket.getOffer().getDirection().getPath().getLast()
+                    ticket.getOffer().getDirection().getPath().get(ticket.getOffer().getDirection().getPath().size() - 1)
             );
+
             Date ticketDepartureDate = localDateTimeToDate(ticket.getOffer().getDepartureTime());
             Date ticketArrivalDate = localDateTimeToDate(ticket.getOffer().getArrivalTime());
+
             boolean departureAfterStart = !ticketDepartureDate.before(startDate);
             boolean arrivalBeforeEnd = !ticketArrivalDate.after(endDate);
+
             if (fromMatches && toMatches && departureAfterStart && arrivalBeforeEnd) {
                 goodTickets.add(ticket);
             }
@@ -39,12 +49,17 @@ public class TicketService {
         return goodTickets;
     }
 
+
     public void buyTheTicket(Ticket ticket) {
-        if(ticket!=null){
+        if (ticket != null) {
             ticketRepository.addBoughtTicket(ticket);
-            TicketParser.writeBoughtTicketToFile(ticketRepository.getBoughtTicketFilePath(), ticketRepository.getBoughtTickets());
+            TicketParser.writeBoughtTicketToFile(
+                    ticketRepository.getBoughtTicketFilePath(),
+                    ticketRepository.getBoughtTickets()
+            );
         }
     }
+
     private Date localDateTimeToDate(LocalDateTime ldt) {
         return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }

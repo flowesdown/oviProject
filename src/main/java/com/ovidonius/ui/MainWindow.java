@@ -1,7 +1,6 @@
 package com.ovidonius.ui;
 
 import com.ovidonius.models.Ticket;
-import com.ovidonius.repository.TicketRepository;
 import com.ovidonius.services.TicketService;
 
 import javax.swing.*;
@@ -21,33 +20,23 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Инициализация компонентов
-        ticketService = new TicketService(resourcesFilePath);  // Передаем путь к файлу
+        ticketService = new TicketService(resourcesFilePath);
         initComponents();
     }
 
     private void initComponents() {
-        // Панели
         searchPanel = new SearchPanel();
         ticketResultPanel = new TicketResultPanel();
 
-        // Добавляем панели в окно
         add(searchPanel, BorderLayout.NORTH);
         add(ticketResultPanel, BorderLayout.CENTER);
 
-        // Обработка кнопки поиска
         searchPanel.getSearchButton().addActionListener(e -> {
-            // Получаем запрос с параметрами поиска
             SearchPanel.SearchQuery query = searchPanel.getQuery();
-
-            // Получаем результаты на основе фильтров
             List<Ticket> tickets = ticketService.searchTickets(query);
-
-            // Обновляем отображение с результатами
             ticketResultPanel.updateResults(tickets);
         });
 
-        // Обработка кнопки покупки
         ticketResultPanel.getBuyButton().addActionListener(e -> {
             Ticket selected = ticketResultPanel.getSelectedTicket();
             if (selected != null) {

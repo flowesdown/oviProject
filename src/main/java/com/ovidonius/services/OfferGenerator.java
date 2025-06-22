@@ -15,17 +15,14 @@ import java.util.Random;
 public class OfferGenerator {
     private static final Random random = new Random();
 
-    // Метод для генерации заданного числа оферов
     public static List<Offer> generateOffers(int count) {
-        // Инициализация графа городов
         CityGraph.init();
 
         List<Offer> offers = new ArrayList<>();
 
-        while(offers.size() < count) {
-            Offer offer = generateOffer(); // Генерируем один случайный офер
+        while (offers.size() < count) {
+            Offer offer = generateOffer();
 
-            // Добавляем созданный Offer в список, если он не пустой
             if (offer != null) {
                 offers.add(offer);
             }
@@ -36,26 +33,24 @@ public class OfferGenerator {
 
     private static StationType generateEndCity(StationType startCity) {
         StationType endCity = getRandomCity();
-        System.out.println("Пытаемся "+endCity);
+        System.out.println("Пытаемся: " + endCity);
         if (endCity == startCity) {
-            endCity=generateEndCity(startCity);
-            System.out.print("Пытаемся "+endCity);
+            endCity = generateEndCity(startCity);
+            System.out.println("Пытаемся повторно: " + endCity);
         }
-        System.out.println("Получилось "+endCity);
+        System.out.println("Получилось: " + endCity);
         return endCity;
     }
 
-    // Метод для генерации одного случайного офера
     private static Offer generateOffer() {
-        // Генерируем случайный город как стартовый пункт
         StationType startCity = getRandomCity();
         StationType endCity = generateEndCity(startCity);
 
-        System.out.print("Города "+startCity+" "+endCity);
+        System.out.println("Города: " + startCity + " -> " + endCity);
 
         Direction direction = new Direction(startCity.name(), endCity.name());
 
-        System.out.println("путь "+direction);
+        System.out.println("Путь: " + direction);
         if (direction.getTime() > 0) {
             TrainType trainType = getRandomTrainType();
             TrainClass trainClass = getRandomTrainClass();
@@ -63,33 +58,23 @@ public class OfferGenerator {
             return new Offer(direction, train);
         }
 
-        return null; // Возвращаем null, если направление не существует
+        return null;
     }
 
     private static StationType getRandomCity() {
         StationType[] cities = StationType.values();
         StationType city = cities[random.nextInt(cities.length)];
-        System.out.println("случайный город "+city);
+        System.out.println("Случайный город: " + city);
         return city;
     }
 
-    // Метод для получения случайного типа поезда
     private static TrainType getRandomTrainType() {
         TrainType[] trainTypes = TrainType.values();
         return trainTypes[random.nextInt(trainTypes.length)];
     }
 
-    // Метод для получения случайного класса поезда
     private static TrainClass getRandomTrainClass() {
         TrainClass[] trainClasses = TrainClass.values();
         return trainClasses[random.nextInt(trainClasses.length)];
     }
-
-//    // Пример вызова метода и вывода результата
-//    public static void main(String[] args) {
-//        List<Offer> offers = generateOffers(10); // Генерируем 10 случайных оферов
-//        for (Offer offer : offers) {
-//            System.out.println(offer);
-//        }
-//    }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 public class Direction {
+
     private List<StationType> path;
     private int time;
     private int distance;
@@ -18,9 +19,10 @@ public class Direction {
 
         if (start != null && end != null) {
             path = PathFinder.findPath(start, end);
+
             if (path != null && !path.isEmpty()) {
                 distance = path.size() - 1;
-                time = (int) (distance * 1.75); // Ожидаемое время в пути
+                time = (int) (distance * 1.75);
             } else {
                 distance = 0;
                 time = 0;
@@ -32,17 +34,14 @@ public class Direction {
         }
     }
 
-    // Возвращаем путь как список станций
     public List<StationType> getPath() {
         return path;
     }
 
-    // Возвращаем время в пути
     public int getTime() {
         return time;
     }
 
-    // Возвращаем дистанцию
     public int getDistance() {
         return distance;
     }

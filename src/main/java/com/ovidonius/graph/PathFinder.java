@@ -20,24 +20,25 @@ public class PathFinder {
             StationType current = queue.poll();
 
             for (StationType neighbor : current.getNeighbors()) {
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    previous.put(neighbor, current);
-                    queue.add(neighbor);
+                if (visited.contains(neighbor)) continue;
 
-                    if (neighbor == end) {
-                        return buildPath(previous, start, end);
-                    }
+                previous.put(neighbor, current);
+
+                if (neighbor == end) {
+                    return buildPath(previous, end);
                 }
+
+                visited.add(neighbor);
+                queue.add(neighbor);
             }
         }
 
         return Collections.emptyList();
     }
 
-    private static List<StationType> buildPath(Map<StationType, StationType> prev, StationType start, StationType end) {
+    private static List<StationType> buildPath(Map<StationType, StationType> previous, StationType end) {
         List<StationType> path = new ArrayList<>();
-        for (StationType at = end; at != null; at = prev.get(at)) {
+        for (StationType at = end; at != null; at = previous.get(at)) {
             path.add(at);
         }
         Collections.reverse(path);

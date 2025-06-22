@@ -9,19 +9,19 @@ import java.util.List;
 @Getter
 public enum StationType {
     BUCHAREST("Bucharest"),
-    CLUJ_NAPOCA("Cluj-Napoca"),
+    CLUJNAPOCA("ClujNapoca"),
     TIMISOARA("Timisoara"),
     IASI("Iasi"),
     CONSTANTA("Constanta"),
     BRASOV("Brasov"),
     CRAIOVA("Craiova"),
-    GALATI("Galați"),
-    PLOIESTI("Ploiești"),
+    GALATI("Galati"),
+    PLOIESTI("Ploiesti"),
     ARAD("Arad"),
-    TARGU_MURES("Targu Mureș"),
+    TARGUMURES("TarguMures"),
     SIBIU("Sibiu"),
     ORADEA("Oradea"),
-    PITESTI("Pitești");
+    PITESTI("Pitesti");
 
     private final String cityName;
     private List<StationType> neighbors;
@@ -38,13 +38,12 @@ public enum StationType {
         this.neighbors = Arrays.asList(neighbors);
     }
 
-    // Метод для получения StationType по названию города (без учета регистра)
     public static StationType getStationTypeByName(String name) {
         for (StationType station : StationType.values()) {
             if (station.cityName.equalsIgnoreCase(name)) {
                 return station;
             }
         }
-        return null; // Возвращаем null, если не нашли соответствующий город
+        return null;
     }
 }

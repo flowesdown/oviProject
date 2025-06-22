@@ -6,7 +6,6 @@ import com.ovidonius.models.enums.TrainType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDateTime;
 
 public class SearchPanel extends JPanel {
 
@@ -29,31 +28,24 @@ public class SearchPanel extends JPanel {
 
         int y = 0;
 
-        // Станции
         fromStationBox = new JComboBox<>(StationType.values());
         toStationBox = new JComboBox<>(StationType.values());
         viaStationCheck = new JCheckBox("Через станцию");
         viaStationBox = new JComboBox<>(StationType.values());
         viaStationBox.setEnabled(false);
 
-        // Тип поезда и класс
         trainTypeBox = new JComboBox<>(TrainType.values());
         trainClassBox = new JComboBox<>(TrainClass.values());
 
-        // Максимальная цена
         maxPriceField = new JTextField(10);
 
-        // Кнопка поиска
         searchButton = new JButton("Найти поезда");
 
-        // Настройка времени (для начала и окончания)
         departureStartTimeSpinner = new JSpinner(new SpinnerDateModel());
         departureEndTimeSpinner = new JSpinner(new SpinnerDateModel());
 
-        // Слушатель чекбокса
         viaStationCheck.addActionListener(e -> viaStationBox.setEnabled(viaStationCheck.isSelected()));
 
-        // Добавляем на панель
         gbc.gridy = y++;
         add(new JLabel("Станция отправления:"), gbc);
         add(fromStationBox, gbc);
@@ -127,7 +119,6 @@ public class SearchPanel extends JPanel {
         }
     }
 
-    // Добавляем метод для получения времени отправления
     public java.util.Date getDepartureTimeStart() {
         return (java.util.Date) departureStartTimeSpinner.getValue();
     }
@@ -136,7 +127,6 @@ public class SearchPanel extends JPanel {
         return (java.util.Date) departureEndTimeSpinner.getValue();
     }
 
-    // Структура запроса для фильтрации билетов
     public static class SearchQuery {
         private final StationType fromStation;
         private final StationType toStation;
@@ -162,7 +152,6 @@ public class SearchPanel extends JPanel {
             this.departureTimeEnd = departureTimeEnd;
         }
 
-        // Геттеры
         public StationType getFromStation() {
             return fromStation;
         }
@@ -200,7 +189,6 @@ public class SearchPanel extends JPanel {
         }
     }
 
-    // Получаем параметры из панели и возвращаем запрос
     public SearchQuery getQuery() {
         return new SearchQuery(
                 getFromStation(),

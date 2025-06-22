@@ -16,20 +16,10 @@ public class Main2 {
 
         String filePath = "src/main/resources/tickets.txt";
         List<Ticket> tickets = TicketParser.readTicketsFromFile(filePath);
-//        System.out.println(tickets.get(0).getOffer().getDirection());
-//        for(Ticket ticket : tickets) {
-//            System.out.println(ticket.getOffer());
-//        }
-        List<Offer> offers = OfferGenerator.generateOffers(500);
-//        List<Ticket> tickets = new ArrayList<>(offers.size());
+        List<Offer> offers = OfferGenerator.generateOffers(1500);
         for(Offer offer : offers){
             tickets.add(new Ticket(offer));
         }
-
-
-        // Сохранение в новый файл
         TicketParser.writeTicketsToFile(filePath, tickets);
-
-        System.out.println("Тикеты сохранены в файл: " + filePath);
     }
 }
