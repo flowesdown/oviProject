@@ -25,6 +25,15 @@ public class Offer {
         this.departureTime = calculateDepartureTime();
         this.arrivalTime = calculateArrivalTime();
     }
+    public Offer(Offer other) {
+        this.price = other.price;
+        this.departureTime = other.departureTime;
+        this.arrivalTime = other.arrivalTime;
+        this.direction = new Direction(other.direction);
+        this.train = other.train;
+    }
+
+
 
     private double calculatePrice() {
         int travelTime = direction.getTime();

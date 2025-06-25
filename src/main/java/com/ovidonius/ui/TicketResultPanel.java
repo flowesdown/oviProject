@@ -18,9 +18,9 @@ public class TicketResultPanel extends JPanel {
         ticketJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(ticketJList);
 
-        buyButton = new JButton("Купить билет");
+        buyButton = new JButton("Buy the ticket");
 
-        add(new JLabel("Результаты поиска:"), BorderLayout.NORTH);
+        add(new JLabel("Search result:"), BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(buyButton, BorderLayout.SOUTH);
     }

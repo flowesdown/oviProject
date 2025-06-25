@@ -31,20 +31,23 @@ public class MainWindow extends JFrame {
         add(searchPanel, BorderLayout.NORTH);
         add(ticketResultPanel, BorderLayout.CENTER);
 
-        searchPanel.getSearchButton().addActionListener(e -> {
-            SearchPanel.SearchQuery query = searchPanel.getQuery();
-            List<Ticket> tickets = ticketService.searchTickets(query);
-            ticketResultPanel.updateResults(tickets);
-        });
+        searchPanel.getSearchButton().addActionListener(e -> performSearch());
+        ticketResultPanel.getBuyButton().addActionListener(e -> purchaseSelectedTicket());
+    }
 
-        ticketResultPanel.getBuyButton().addActionListener(e -> {
-            Ticket selected = ticketResultPanel.getSelectedTicket();
-            if (selected != null) {
-                JOptionPane.showMessageDialog(this, "Билет куплен:\n" + selected);
-                ticketService.buyTheTicket(selected);
-            } else {
-                JOptionPane.showMessageDialog(this, "Пожалуйста, выберите билет");
-            }
-        });
+    private void performSearch() {
+        SearchPanel.SearchQuery query = searchPanel.getQuery();
+        List<Ticket> tickets = ticketService.searchTickets(query);
+        ticketResultPanel.updateResults(tickets);
+    }
+
+    private void purchaseSelectedTicket() {
+        Ticket selected = ticketResultPanel.getSelectedTicket();
+        if (selected != null) {
+            JOptionPane.showMessageDialog(this, "Ticket purchased:\n" + selected);
+            ticketService.buyTheTicket(selected);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a ticket.");
+        }
     }
 }

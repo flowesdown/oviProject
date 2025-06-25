@@ -18,6 +18,11 @@ public class Ticket {
         this.offer = offer;
         this.issuedAt = LocalDateTime.now();
     }
+    public Ticket(Ticket other) {
+        this.ticketId = other.ticketId;
+        this.offer = new Offer(other.offer); // тоже нужен copy-конструктор в Offer
+    }
+
 
     private String generateTicketId() {
         return "TICKET-" + System.currentTimeMillis();

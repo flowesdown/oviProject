@@ -1,11 +1,10 @@
 package com.ovidonius.ui;
 
-import com.ovidonius.models.enums.StationType;
-import com.ovidonius.models.enums.TrainClass;
-import com.ovidonius.models.enums.TrainType;
+import com.ovidonius.models.enums.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 
 public class SearchPanel extends JPanel {
 
@@ -15,6 +14,7 @@ public class SearchPanel extends JPanel {
     private JComboBox<StationType> viaStationBox;
     private JComboBox<TrainType> trainTypeBox;
     private JComboBox<TrainClass> trainClassBox;
+    private JComboBox<DiscountType> discountTypeBox;
     private JTextField maxPriceField;
     private JButton searchButton;
     private JSpinner departureStartTimeSpinner;
@@ -30,57 +30,53 @@ public class SearchPanel extends JPanel {
 
         fromStationBox = new JComboBox<>(StationType.values());
         toStationBox = new JComboBox<>(StationType.values());
-        viaStationCheck = new JCheckBox("Через станцию");
+        viaStationCheck = new JCheckBox("Via station");
         viaStationBox = new JComboBox<>(StationType.values());
         viaStationBox.setEnabled(false);
-
+        discountTypeBox = new JComboBox<>(DiscountType.values());
         trainTypeBox = new JComboBox<>(TrainType.values());
         trainClassBox = new JComboBox<>(TrainClass.values());
-
         maxPriceField = new JTextField(10);
-
-        searchButton = new JButton("Найти поезда");
-
+        searchButton = new JButton("Find trains");
         departureStartTimeSpinner = new JSpinner(new SpinnerDateModel());
         departureEndTimeSpinner = new JSpinner(new SpinnerDateModel());
 
         viaStationCheck.addActionListener(e -> viaStationBox.setEnabled(viaStationCheck.isSelected()));
 
-        gbc.gridy = y++;
-        add(new JLabel("Станция отправления:"), gbc);
-        add(fromStationBox, gbc);
+        addLabeledComponent("Departure station:", fromStationBox, gbc, y++);
+        addLabeledComponent("Arrival station:", toStationBox, gbc, y++);
+        addViaStationComponents(gbc, y++);
+        addLabeledComponent("Train type:", trainTypeBox, gbc, y++);
+        addLabeledComponent("Train class:", trainClassBox, gbc, y++);
+        addLabeledComponent("Max price:", maxPriceField, gbc, y++);
+        addLabeledComponent("Departure time (start):", departureStartTimeSpinner, gbc, y++);
+        addLabeledComponent("Departure time (end):", departureEndTimeSpinner, gbc, y++);
+        addLabeledComponent("Discount type:", discountTypeBox, gbc, y++);
 
-        gbc.gridy = y++;
-        add(new JLabel("Станция прибытия:"), gbc);
-        add(toStationBox, gbc);
-
-        gbc.gridy = y++;
-        add(viaStationCheck, gbc);
-        add(viaStationBox, gbc);
-
-        gbc.gridy = y++;
-        add(new JLabel("Тип поезда:"), gbc);
-        add(trainTypeBox, gbc);
-
-        gbc.gridy = y++;
-        add(new JLabel("Класс поезда:"), gbc);
-        add(trainClassBox, gbc);
-
-        gbc.gridy = y++;
-        add(new JLabel("Максимальная цена:"), gbc);
-        add(maxPriceField, gbc);
-
-        gbc.gridy = y++;
-        add(new JLabel("Время отправления (начало):"), gbc);
-        add(departureStartTimeSpinner, gbc);
-
-        gbc.gridy = y++;
-        add(new JLabel("Время отправления (конец):"), gbc);
-        add(departureEndTimeSpinner, gbc);
-
-        gbc.gridy = y++;
+        gbc.gridx = 0;
+        gbc.gridy = y;
         gbc.gridwidth = 2;
         add(searchButton, gbc);
+    }
+
+    private void addViaStationComponents(GridBagConstraints gbc, int y) {
+        gbc.gridy = y;
+
+        gbc.gridx = 0;
+        add(viaStationCheck, gbc);
+
+        gbc.gridx = 1;
+        add(viaStationBox, gbc);
+    }
+
+    private void addLabeledComponent(String label, Component component, GridBagConstraints gbc, int y) {
+        gbc.gridy = y;
+
+        gbc.gridx = 0;
+        add(new JLabel(label), gbc);
+
+        gbc.gridx = 1;
+        add(component, gbc);
     }
 
     public JButton getSearchButton() {
@@ -119,12 +115,27 @@ public class SearchPanel extends JPanel {
         }
     }
 
-    public java.util.Date getDepartureTimeStart() {
-        return (java.util.Date) departureStartTimeSpinner.getValue();
+    public Date getDepartureTimeStart() {
+        return (Date) departureStartTimeSpinner.getValue();
     }
 
-    public java.util.Date getDepartureTimeEnd() {
-        return (java.util.Date) departureEndTimeSpinner.getValue();
+    public Date getDepartureTimeEnd() {
+        return (Date) departureEndTimeSpinner.getValue();
+    }
+
+    public SearchQuery getQuery() {
+        return new SearchQuery(
+                getFromStation(),
+                getToStation(),
+                isViaStationEnabled(),
+                getViaStation(),
+                getTrainType(),
+                getTrainClass(),
+                getMaxPrice(),
+                getDepartureTimeStart(),
+                getDepartureTimeEnd(),
+                (DiscountType) discountTypeBox.getSelectedItem()
+        );
     }
 
     public static class SearchQuery {
@@ -135,12 +146,14 @@ public class SearchPanel extends JPanel {
         private final TrainType trainType;
         private final TrainClass trainClass;
         private final Double maxPrice;
-        private final java.util.Date departureTimeStart;
-        private final java.util.Date departureTimeEnd;
+        private final Date departureTimeStart;
+        private final Date departureTimeEnd;
+        private final DiscountType discountType;
 
         public SearchQuery(StationType fromStation, StationType toStation, boolean viaStationEnabled,
                            StationType viaStation, TrainType trainType, TrainClass trainClass,
-                           Double maxPrice, java.util.Date departureTimeStart, java.util.Date departureTimeEnd) {
+                           Double maxPrice, Date departureTimeStart, Date departureTimeEnd,
+                           DiscountType discountType) {
             this.fromStation = fromStation;
             this.toStation = toStation;
             this.viaStationEnabled = viaStationEnabled;
@@ -150,6 +163,11 @@ public class SearchPanel extends JPanel {
             this.maxPrice = maxPrice;
             this.departureTimeStart = departureTimeStart;
             this.departureTimeEnd = departureTimeEnd;
+            this.discountType = discountType;
+        }
+
+        public DiscountType getDiscountType() {
+            return discountType;
         }
 
         public StationType getFromStation() {
@@ -180,26 +198,12 @@ public class SearchPanel extends JPanel {
             return maxPrice;
         }
 
-        public java.util.Date getDepartureTimeStart() {
+        public Date getDepartureTimeStart() {
             return departureTimeStart;
         }
 
-        public java.util.Date getDepartureTimeEnd() {
+        public Date getDepartureTimeEnd() {
             return departureTimeEnd;
         }
-    }
-
-    public SearchQuery getQuery() {
-        return new SearchQuery(
-                getFromStation(),
-                getToStation(),
-                isViaStationEnabled(),
-                getViaStation(),
-                getTrainType(),
-                getTrainClass(),
-                getMaxPrice(),
-                getDepartureTimeStart(),
-                getDepartureTimeEnd()
-        );
     }
 }

@@ -4,6 +4,7 @@ import com.ovidonius.graph.PathFinder;
 import com.ovidonius.models.enums.StationType;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -33,17 +34,10 @@ public class Direction {
             time = 0;
         }
     }
-
-    public List<StationType> getPath() {
-        return path;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public int getDistance() {
-        return distance;
+    public Direction(Direction other) {
+        this.path = other.path != null ? new ArrayList<>(other.path) : null;
+        this.time = other.time;
+        this.distance = other.distance;
     }
 
     @Override

@@ -17,12 +17,10 @@ public class OfferGenerator {
 
     public static List<Offer> generateOffers(int count) {
         CityGraph.init();
-
         List<Offer> offers = new ArrayList<>();
 
         while (offers.size() < count) {
             Offer offer = generateOffer();
-
             if (offer != null) {
                 offers.add(offer);
             }
@@ -31,26 +29,14 @@ public class OfferGenerator {
         return offers;
     }
 
-    private static StationType generateEndCity(StationType startCity) {
-        StationType endCity = getRandomCity();
-        System.out.println("Пытаемся: " + endCity);
-        if (endCity == startCity) {
-            endCity = generateEndCity(startCity);
-            System.out.println("Пытаемся повторно: " + endCity);
-        }
-        System.out.println("Получилось: " + endCity);
-        return endCity;
-    }
-
     private static Offer generateOffer() {
         StationType startCity = getRandomCity();
-        StationType endCity = generateEndCity(startCity);
+        StationType endCity = generateDifferentEndCity(startCity);
 
-        System.out.println("Города: " + startCity + " -> " + endCity);
+        System.out.printf("Generating offer: %s -> %s%n", startCity, endCity);
 
         Direction direction = new Direction(startCity.name(), endCity.name());
 
-        System.out.println("Путь: " + direction);
         if (direction.getTime() > 0) {
             TrainType trainType = getRandomTrainType();
             TrainClass trainClass = getRandomTrainClass();
@@ -61,11 +47,17 @@ public class OfferGenerator {
         return null;
     }
 
+    private static StationType generateDifferentEndCity(StationType startCity) {
+        StationType endCity = getRandomCity();
+        while (endCity == startCity) {
+            endCity = getRandomCity();
+        }
+        return endCity;
+    }
+
     private static StationType getRandomCity() {
         StationType[] cities = StationType.values();
-        StationType city = cities[random.nextInt(cities.length)];
-        System.out.println("Случайный город: " + city);
-        return city;
+        return cities[random.nextInt(cities.length)];
     }
 
     private static TrainType getRandomTrainType() {
